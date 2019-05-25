@@ -1,0 +1,4 @@
+github "SnapKit/SnapKit" ~> 4.0
+github "ameingast/cocoaimagehashing" ~> 1.7.0
+github "ReactiveCocoa/ReactiveCocoa" "45d19e1920083c8b5a966b0a3dfe68c0d584e59b"
+github "ReactiveCocoa/ReactiveSwift" ~> 6.0
