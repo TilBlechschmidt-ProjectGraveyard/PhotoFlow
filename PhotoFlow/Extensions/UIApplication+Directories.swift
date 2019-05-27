@@ -19,8 +19,16 @@ extension UIApplication {
 
     static func documentCreationCacheDirectory() -> URL {
         let cacheURL = UIApplication.cacheDirectory().appendingPathComponent("DocumentCreation")
-//        FileManager.default.createDirectory(at: cacheURL, withIntermediateDirectories: true, attributes: nil)
+        try? FileManager.default.createDirectory(at: cacheURL, withIntermediateDirectories: true, attributes: nil)
         return cacheURL
+    }
+
+    static func documentExportCacheDirectory() -> URL {
+        return FileManager.default.temporaryDirectory
+//        let cacheURL = try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true).appendingPathComponent("Shared")
+//        let cacheURL = UIApplication.cacheDirectory().appendingPathComponent("DocumentExport")
+//        try? FileManager.default.createDirectory(at: cacheURL, withIntermediateDirectories: true, attributes: nil)
+//        return cacheURL
     }
 
     static func documentsDirectory() -> URL {

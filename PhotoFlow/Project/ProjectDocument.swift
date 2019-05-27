@@ -10,7 +10,6 @@ import UIKit
 import CoreData
 import Photos
 import ReactiveSwift
-import CoreServices
 
 class ProjectDocument: UIManagedDocument {
     private let importManager: ImportManager
@@ -194,12 +193,35 @@ class ProjectDocument: UIManagedDocument {
             progress: Property(capturing: totalProgress)
         )
     }
-}
 
-extension ImageEntity {
-    var humanReadableUTI: String? {
-        return self.uti.flatMap {
-            UTTypeCopyDescription($0 as CFString)?.takeRetainedValue() as String?
-        }
-    }
+//    // TODO Deduplicate the code in this and the next function
+//    func image(after id: ImageEntity.ID) -> ImageEntity.ID? {
+//        guard let entity = imageManager.imageEntity(withID: id), let creationDate = entity.creationDate else {
+//            return nil
+//        }
+//
+//        let fetchRequest: NSFetchRequest<ImageEntity> = ImageEntity.fetchRequest()
+//        let sort = NSSortDescriptor(key: #keyPath(ImageEntity.creationDate), ascending: true)
+//        fetchRequest.sortDescriptors = [sort]
+//        fetchRequest.fetchLimit = 1
+//        fetchRequest.predicate = NSPredicate(format: "creationDate > %@", NSDate(timeIntervalSince1970: creationDate.timeIntervalSince1970))
+//        // TODO Filter images by ProjectEntity. Not really necessary since there is only one but whatever.
+//
+//        return (try? managedObjectContext.fetch(fetchRequest))?.first?.objectID
+//    }
+//
+//    func image(before id: ImageEntity.ID) -> ImageEntity.ID? {
+//        guard let entity = imageManager.imageEntity(withID: id), let creationDate = entity.creationDate else {
+//            return nil
+//        }
+//
+//        let fetchRequest: NSFetchRequest<ImageEntity> = ImageEntity.fetchRequest()
+//        let sort = NSSortDescriptor(key: #keyPath(ImageEntity.creationDate), ascending: false)
+//        fetchRequest.sortDescriptors = [sort]
+//        fetchRequest.fetchLimit = 1
+//        fetchRequest.predicate = NSPredicate(format: "creationDate < %@", NSDate(timeIntervalSince1970: creationDate.timeIntervalSince1970))
+//        // TODO Filter images by ProjectEntity. Not really necessary since there is only one but whatever.
+//
+//        return (try? managedObjectContext.fetch(fetchRequest))?.first?.objectID
+//    }
 }

@@ -8,11 +8,15 @@
 
 import UIKit
 import ReactiveSwift
+import SnapKit
 
 class ImageBrowserCell: UICollectionViewCell {
     private var imageLoadDisposable: Disposable?
 
+    // TODO Move the managers to the parent by delegating
     var imageManager: ImageManager!
+    var browsingManager: BrowsingManager!
+    var index: Int!
     var imageListEntry: ImageListEntry! {
         didSet {
             switch imageListEntry! {
@@ -24,11 +28,16 @@ class ImageBrowserCell: UICollectionViewCell {
         }
     }
 
-    private var imagesView = UIView()
-    private var imageView = ShadowedImageView()
+    private(set) var imagesView = UIView()
+    private(set) var imageView = ShadowedImageView()
     private var subImageView1 = ShadowedImageView()
     private var subImageView2 = ShadowedImageView()
+
     private var labelView = UILabel()
+    private var iconView = UIImageView()
+
+    private var leftActionItem = UIImageView()
+    private var rightActionItem = UIImageView()
 
     private var activityIndicator = UIActivityIndicatorView(style: .white)
 
@@ -43,6 +52,14 @@ class ImageBrowserCell: UICollectionViewCell {
 
     override func prepareForReuse() {
         super.prepareForReuse()
+
+        isHidden = false
+        imagesView.alpha = 1
+
+        setShadowColor(UIColor.black)
+
+        iconView.image = nil
+
         imageLoadDisposable?.dispose()
         imageLoadDisposable = nil
 
@@ -56,6 +73,12 @@ class ImageBrowserCell: UICollectionViewCell {
 
         labelView.text = nil
         activityIndicator.startAnimating()
+    }
+
+    func setShadowColor(_ shadowColor: UIColor) {
+        imageView.shadowColor = shadowColor.cgColor
+        subImageView1.shadowColor = shadowColor.cgColor
+        subImageView2.shadowColor = shadowColor.cgColor
     }
 
     func addImageView(_ view: ShadowedImageView, subImage: Bool = false) {
@@ -84,8 +107,26 @@ class ImageBrowserCell: UICollectionViewCell {
         labelView.font = UIFont.systemFont(ofSize: 13)
         labelView.textAlignment = .center
 
+        iconView.contentMode = .scaleAspectFit
+
+        leftActionItem.tintColor = Constants.colors.accepted
+        rightActionItem.tintColor = Constants.colors.rejected
+
+        leftActionItem.image = #imageLiteral(resourceName: "CheckMark")
+        rightActionItem.image = #imageLiteral(resourceName: "Rejected")
+
+        leftActionItem.alpha = 0
+        rightActionItem.alpha = 0
+
+        addSubview(iconView)
         addSubview(imagesView)
         addSubview(labelView)
+
+        iconView.snp.makeConstraints { make in
+            make.right.equalTo(labelView.snp.left).inset(-Constants.uiPadding / 2)
+            make.centerY.equalTo(labelView.snp.centerY)
+            make.height.lessThanOrEqualTo(20)
+        }
 
         imagesView.snp.makeConstraints { make in
             make.top.equalToSuperview()
@@ -95,8 +136,7 @@ class ImageBrowserCell: UICollectionViewCell {
 
         labelView.snp.makeConstraints { make in
             make.top.equalTo(imagesView.snp.bottom).offset(Constants.uiPadding)
-            make.left.equalToSuperview()
-            make.right.equalToSuperview()
+            make.centerX.equalToSuperview()
             make.bottom.equalToSuperview()
             make.height.equalTo(30)
         }
@@ -105,6 +145,78 @@ class ImageBrowserCell: UICollectionViewCell {
         addSubview(activityIndicator)
         activityIndicator.snp.makeConstraints { make in
             make.edges.equalToSuperview()
+        }
+
+        addSubview(leftActionItem)
+        leftActionItem.snp.makeConstraints { make in
+            make.centerY.equalTo(imagesView)
+            leftActionItemXConstraint = make.centerX.equalTo(imagesView).constraint
+        }
+
+        addSubview(rightActionItem)
+        rightActionItem.snp.makeConstraints { make in
+            make.centerY.equalTo(imagesView)
+            rightActionItemXConstraint = make.centerX.equalTo(imagesView).constraint
+        }
+
+        sendSubviewToBack(leftActionItem)
+        sendSubviewToBack(rightActionItem)
+
+        let panGestureRecognizer = PanDirectionGestureRecognizer(direction: .horizontal, target: self, action: #selector(panGesture(panGestureRecognizer:)))
+        imagesView.addGestureRecognizer(panGestureRecognizer)
+    }
+
+    private var leftActionItemXConstraint: Constraint!
+    private var rightActionItemXConstraint: Constraint!
+
+    @objc func panGesture(panGestureRecognizer: PanDirectionGestureRecognizer) {
+        let translation = panGestureRecognizer.translation(in: imagesView)
+
+        let distanceLimit: CGFloat = 50
+        let clampedTranslation = min(max(translation.x, -distanceLimit), distanceLimit)
+        let distancePercentage = clampedTranslation / distanceLimit
+        let easedPercentage = sin(distancePercentage * CGFloat.pi / 2)
+        let easedTranslation = distanceLimit * easedPercentage
+        let actionScale = abs(easedPercentage) * 0.5 + 0.5
+
+        let transform = CGAffineTransform(translationX: easedTranslation, y: 0)
+        let actionTransform = CGAffineTransform(scaleX: actionScale, y: actionScale)
+
+        if distancePercentage > 0 {
+            leftActionItem.transform = actionTransform
+            leftActionItem.alpha = easedPercentage
+        } else {
+            rightActionItem.transform = actionTransform
+            rightActionItem.alpha = abs(easedPercentage)
+        }
+
+        switch panGestureRecognizer.state {
+        case .possible:
+            break
+        case .began:
+            imagesView.transform = transform
+        case .changed:
+            imagesView.transform = transform
+        case .ended:
+            fallthrough
+        case .cancelled:
+            fallthrough
+        case .failed:
+            fallthrough
+        default:
+            UIView.animate(
+                withDuration: 0.5,
+                animations: {
+                    self.leftActionItem.alpha = 0
+                    self.rightActionItem.alpha = 0
+                    self.imagesView.transform = CGAffineTransform.identity
+                },
+                completion: { _ in
+                    if abs(distancePercentage) == 1 {
+                        self.browsingManager.setStatusOfItem(atIndex: self.index, to: distancePercentage > 0 ? .accepted : .rejected, resetIfSame: true)
+                    }
+                }
+            )
         }
     }
 
@@ -124,15 +236,31 @@ class ImageBrowserCell: UICollectionViewCell {
 
     func loadImage(withID id: ImageEntity.ID) {
         let imageEntity = imageManager.imageEntity(withID: id)
+        let status = imageEntity?.status ?? .unspecified
         self.labelView.text = imageEntity?.creationDate.flatMap { creationDateFormatter.string(from: $0) }
 
-        imageLoadDisposable = imageManager?.fetchImage(withID: id, thumbnail: true).startWithResult {
+        imageLoadDisposable = imageManager?.fetchImage(withID: id, mode: .thumbnail).startWithResult {
             if let image = $0.value {
                 DispatchQueue.main.async {
                     self.imageView.image = image
                     self.activityIndicator.stopAnimating()
+                    self.updateImageWidth()
                 }
             }
+        }
+
+        switch status {
+        case .unspecified:
+            break
+        case .accepted:
+            iconView.image = #imageLiteral(resourceName: "CheckMark")
+            iconView.tintColor = Constants.colors.accepted
+            break
+        case .rejected:
+            iconView.image = #imageLiteral(resourceName: "Rejected")
+            iconView.tintColor = Constants.colors.border
+            imagesView.alpha = 0.15
+            break
         }
     }
 
@@ -153,7 +281,7 @@ class ImageBrowserCell: UICollectionViewCell {
         var counter = 0
 
         imageLoadDisposable = SignalProducer(previewImages)
-            .flatMap(.merge) { imageManager.fetchImage(withID: $0, thumbnail: true) }
+            .flatMap(.merge) { imageManager.fetchImage(withID: $0, mode: .thumbnail) }
             .startWithResult {
                 if let image = $0.value {
                     DispatchQueue.main.async {
@@ -167,6 +295,8 @@ class ImageBrowserCell: UICollectionViewCell {
                         default:
                             self.subImageView2.image = image
                         }
+
+                        self.updateImageWidth()
 
                         counter += 1
                     }
@@ -185,5 +315,16 @@ class ImageBrowserCell: UICollectionViewCell {
         }
 
         self.labelView.text = creationDateIntervalFormatter.string(from: startDate, to: endDate)
+    }
+
+    func updateImageWidth() {
+        let coverImageWidth = imageView.imageBoundingRect?.size.width ?? 0
+        let subImage1Width = subImageView1.imageBoundingRect?.size.width ?? 0
+        let subImage2Width = subImageView2.imageBoundingRect?.size.width ?? 0
+        let width = max(coverImageWidth, subImage1Width, subImage2Width)
+        let offset = width / 2.5
+
+        leftActionItemXConstraint.update(offset: -offset)
+        rightActionItemXConstraint.update(offset: offset)
     }
 }

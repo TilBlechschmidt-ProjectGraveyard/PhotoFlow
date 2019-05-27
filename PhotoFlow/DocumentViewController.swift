@@ -9,14 +9,12 @@
 import UIKit
 
 class DocumentViewController: UIViewController {
-    private let browserVC = ImageBrowserViewController()
-    
     var document: ProjectDocument?
 
     override var navigationItem: UINavigationItem {
         let item = UINavigationItem(title: document?.title ?? "PhotoFlow")
         item.largeTitleDisplayMode = .automatic
-        item.rightBarButtonItem = UIBarButtonItem(title: "Close", style: .done, target: self, action: #selector(dismissDocumentViewController))
+        item.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(dismissDocumentViewController))
         return item
     }
 
@@ -24,9 +22,8 @@ class DocumentViewController: UIViewController {
         return .lightContent
     }
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
+    private func loadBrowserVC(with document: ProjectDocument) {
+        let browserVC = ImageBrowserViewController(document: document)
         addChild(browserVC)
 
         view.addSubview(browserVC.view)
@@ -34,13 +31,18 @@ class DocumentViewController: UIViewController {
             make.edges.equalToSuperview()
         }
 
-        view.backgroundColor = Constants.colors.background
-
         browserVC.didMove(toParent: self)
         browserVC.view.snp.makeConstraints { make in
             make.left.equalToSuperview()
             make.right.equalToSuperview()
         }
+
+//        browserVC.imageEntities = document.imageManager.imageList()
+    }
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        view.backgroundColor = Constants.colors.background
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -51,8 +53,7 @@ class DocumentViewController: UIViewController {
             if success {
                 // Display the content of the document, e.g.:
                 if let document = self.document {
-                    self.browserVC.imageManager = document.imageManager
-                    self.browserVC.imageEntities = document.imageManager.imageList()
+                    self.loadBrowserVC(with: document)
                 } else {
                     // TODO Show error / loading indicator
                 }

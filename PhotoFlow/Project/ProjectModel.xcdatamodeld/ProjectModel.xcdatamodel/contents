@@ -7,6 +7,7 @@
         <attribute name="orientation" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="originalFilename" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="perceptualHash" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="statusValue" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="thumbnailData" optional="YES" attributeType="Binary" allowsExternalBinaryDataStorage="YES" syncable="YES"/>
         <attribute name="uti" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="width" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
@@ -17,7 +18,7 @@
         <relationship name="images" toMany="YES" deletionRule="Cascade" destinationEntity="ImageEntity" inverseName="project" inverseEntity="ImageEntity" syncable="YES"/>
     </entity>
     <elements>
-        <element name="ImageEntity" positionX="-63" positionY="-9" width="128" height="195"/>
+        <element name="ImageEntity" positionX="-63" positionY="-9" width="128" height="210"/>
         <element name="ProjectEntity" positionX="-63" positionY="-18" width="128" height="75"/>
     </elements>
 </model>

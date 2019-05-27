@@ -15,6 +15,12 @@ enum ImageListEntry {
     case group(withContents: [ImageListEntry])
 }
 
+enum ImageFetchMode {
+    case thumbnail
+    case original
+    case opportunistic
+}
+
 enum ImageManagerError: Error {
     case imageNotFound
     case unableToReadImage
@@ -28,6 +34,19 @@ class ImageManager {
         self.document = document
     }
 
+    /// Main thread only!
+    func imageEntities() -> [ImageEntity] {
+        return document.images
+    }
+
+    func imageEntityIDs() -> [ImageEntity.ID] {
+        var imageEntityIDs: [ImageEntity.ID] = []
+        DispatchQueue.main.sync {
+            imageEntityIDs = document.images.map { $0.objectID }
+        }
+        return imageEntityIDs
+    }
+
     func imageList() -> [ImageListEntry] {
         let entities = self.document.images
 
@@ -35,21 +54,30 @@ class ImageManager {
             return []
         }
 
-        var previousHash: ImageHash = firstItem.imageHash
+        var currentGroupHashes: [ImageHash] = [firstItem.imageHash]
         var currentGroup: [ImageListEntry] = [.image(id: firstItem.objectID)]
         var results: [ImageListEntry] = []
 
+        let pushCurrentGroup = {
+            results.append(
+                currentGroup.count > 1 ? .group(withContents: currentGroup) : currentGroup[0]
+            )
+            currentGroupHashes = []
+            currentGroup = []
+        }
+
         for entity in entities[1...] {
-            if !entity.imageHash.isSimilar(to: previousHash) {
-                results.append(
-                    currentGroup.count > 1 ? .group(withContents: currentGroup) : currentGroup[0]
-                )
-                currentGroup = []
+            let isSimilarToCurrentGroup = currentGroupHashes.reduce(false) { $0 || entity.imageHash.isSimilar(to: $1) }
+
+            if !isSimilarToCurrentGroup {
+                pushCurrentGroup()
             }
 
             currentGroup.append(.image(id: entity.objectID))
-            previousHash = entity.imageHash
+            currentGroupHashes.append(entity.imageHash)
         }
+
+        pushCurrentGroup()
 
         return results
     }
@@ -95,13 +123,37 @@ class ImageManager {
         }
     }
 
-    func fetchImage(withID id: ImageEntity.ID, thumbnail: Bool = false) -> SignalProducer<UIImage, Error> {
-        return fetchImageData(ofImageWithID: id, thumbnail: true).attemptMap { data in
+    private func fetchImage(withID id: ImageEntity.ID, thumbnail: Bool = false) -> SignalProducer<UIImage, Error> {
+        return fetchImageData(ofImageWithID: id, thumbnail: thumbnail).attemptMap { data in
             guard let image = UIImage(data: data) else {
                 throw ImageManagerError.unableToReadImage
             }
 
             return image
+        }
+    }
+
+    private func opportunisticallyFetchImage(withID id: ImageEntity.ID) -> SignalProducer<UIImage, Error> {
+        let thumbnailFetch = fetchImageData(ofImageWithID: id, thumbnail: true)
+        let fullQualityFetch = fetchImageData(ofImageWithID: id, thumbnail: false)
+
+        return thumbnailFetch.concat(fullQualityFetch).attemptMap { data in
+            guard let image = UIImage(data: data) else {
+                throw ImageManagerError.unableToReadImage
+            }
+
+            return image
+        }
+    }
+
+    func fetchImage(withID id: ImageEntity.ID, mode: ImageFetchMode = .thumbnail) -> SignalProducer<UIImage, Error> {
+        switch mode {
+        case .thumbnail:
+            return fetchImage(withID: id, thumbnail: true)
+        case .original:
+            return fetchImage(withID: id, thumbnail: false)
+        case .opportunistic:
+            return opportunisticallyFetchImage(withID: id)
         }
     }
 }

@@ -6,17 +6,27 @@
 //  Copyright © 2019 Til Blechschmidt. All rights reserved.
 //
 
+import Cocoa
 import CoreImage
+import ImageIO
 
-let image = CIImage(contentsOf: URL(fileURLWithPath: "/Users/themegatb/Downloads/Untitled (1).heic"))! // _MG_4086.CR2, _1060031.RW2
-let meta = ImageMetadata(from: image)
+let url = URL(fileURLWithPath: "/Users/themegatb/Downloads/TestFile.CR2")
+let cgImage = NSImage(contentsOf: url)!.cgImage(forProposedRect: nil, context: nil, hints: nil)!
+let start = Date()
+let histogram = cgImage.calculateNormalizedHistogram()
 
-print(meta.exif!.captureTime!)
-print()
-print(meta.tiff!.make!)
-print(meta.tiff!.model!)
-print(meta.tiff!.firmwareVersion)
-print()
-print(meta.aux?.lensModel)
+print(Date().timeIntervalSince(start))
+print(histogram)
 
-print(meta.location)
+//let image = CIImage(contentsOf: URL(fileURLWithPath: "/Users/themegatb/Downloads/Untitled (1).heic"))! // _MG_4086.CR2, _1060031.RW2
+//let meta = ImageMetadata(from: image)
+//
+//print(meta.exif!.captureTime!)
+//print()
+//print(meta.tiff!.make!)
+//print(meta.tiff!.model!)
+//print(meta.tiff!.firmwareVersion)
+//print()
+//print(meta.aux?.lensModel)
+//
+//print(meta.location)

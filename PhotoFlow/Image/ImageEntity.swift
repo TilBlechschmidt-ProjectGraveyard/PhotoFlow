@@ -9,6 +9,13 @@
 import UIKit
 import CoreData
 import ReactiveSwift
+import CoreServices
+
+enum ImageStatus: Int16 {
+    case unspecified = 0
+    case accepted = 1
+    case rejected = 2
+}
 
 @objc(ImageEntity)
 public class ImageEntity: NSManagedObject {
@@ -21,4 +28,19 @@ public class ImageEntity: NSManagedObject {
     lazy var imageHash: ImageHash = {
         return ImageHash(rawValue: self.perceptualHash)
     }()
+
+    lazy var humanReadableUTI: String? = {
+        return self.uti.flatMap {
+            UTTypeCopyDescription($0 as CFString)?.takeRetainedValue() as String?
+        }
+    }()
+
+    var status: ImageStatus {
+        get {
+            return ImageStatus(rawValue: self.statusValue) ?? .unspecified
+        }
+        set {
+            self.statusValue = newValue.rawValue
+        }
+    }
 }

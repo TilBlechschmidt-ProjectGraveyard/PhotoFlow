@@ -9,6 +9,8 @@
 import UIKit
 
 class ShadowedImageView: UIView {
+    static let cornerRadius: CGFloat = 5
+
     private let borderLayer = CAShapeLayer()
     let imageView = UIImageView()
 
@@ -16,6 +18,15 @@ class ShadowedImageView: UIView {
         didSet {
             imageView.image = image
             updateShadow()
+        }
+    }
+
+    var shadowColor: CGColor? {
+        get {
+            return layer.shadowColor
+        }
+        set {
+            layer.shadowColor = newValue
         }
     }
 
@@ -32,6 +43,7 @@ class ShadowedImageView: UIView {
 
     init() {
         super.init(frame: .zero)
+
         addSubview(imageView)
         imageView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
@@ -39,14 +51,14 @@ class ShadowedImageView: UIView {
 
         setupShadow()
         setupBorder()
-        imageView.layer.cornerRadius = 10
+        imageView.layer.cornerRadius = ShadowedImageView.cornerRadius
     }
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
-    private var imageBoundingRect: CGRect? {
+    var imageBoundingRect: CGRect? {
         if let image = self.image {
             let boundsScale = self.bounds.size.width / self.bounds.size.height
             let imageScale = image.size.width / image.size.height
@@ -73,7 +85,7 @@ class ShadowedImageView: UIView {
         }
 
         // Calculate the edge path and build a matching mask from it.
-        let radius: CGFloat = 5
+        let radius: CGFloat = ShadowedImageView.cornerRadius
         let path = UIBezierPath(roundedRect: boundingRect, cornerRadius: radius)
         let mask = CAShapeLayer()
         mask.path = path.cgPath

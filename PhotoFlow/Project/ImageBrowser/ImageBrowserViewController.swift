@@ -10,15 +10,21 @@ import UIKit
 import ReactiveSwift
 
 class ImageBrowserViewController: UICollectionViewController {
-    var imageManager: ImageManager!
+    private let document: ProjectDocument
+    private let imageManager: ImageManager
+    private let browsingManager: BrowsingManager
 
-    var imageEntities: [ImageListEntry] = [] {
-        didSet {
-            collectionView.reloadData()
-        }
-    }
+//    var imageEntities: [ImageListEntry] = [] {
+//        didSet {
+//            collectionView.reloadData()
+//        }
+//    }
 
-    init() {
+    init(document: ProjectDocument) {
+        self.document = document
+        self.imageManager = document.imageManager
+        self.browsingManager = BrowsingManager(imageManager: imageManager)
+
         let layout = UICollectionViewFlowLayout()
         layout.sectionHeadersPinToVisibleBounds = true
         layout.minimumInteritemSpacing = Constants.uiPadding * 3
@@ -26,8 +32,11 @@ class ImageBrowserViewController: UICollectionViewController {
 
         super.init(collectionViewLayout: layout)
 
+        browsingManager.delegate = self
         collectionView.delegate = self
         collectionView.register(ImageBrowserCell.self, forCellWithReuseIdentifier: "ImageBrowserCell")
+
+        browsingManager.loadImages()
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -40,7 +49,7 @@ class ImageBrowserViewController: UICollectionViewController {
     }
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return imageEntities.count
+        return browsingManager.count
     }
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -48,10 +57,50 @@ class ImageBrowserViewController: UICollectionViewController {
 
         if let cell = cell as? ImageBrowserCell {
             cell.imageManager = imageManager
-            cell.imageListEntry = imageEntities[indexPath.item]
+            cell.browsingManager = browsingManager
+            cell.index = indexPath.item
+            cell.imageListEntry = browsingManager[indexPath.item]
         }
 
         return cell
+    }
+
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        collectionView.deselectItem(at: indexPath, animated: true)
+
+        guard let cell = collectionView.cellForItem(at: indexPath) as? ImageBrowserCell else {
+            return
+        }
+
+        let frame = cell.imageView.bounds
+        var imageID: ImageEntity.ID
+
+        switch browsingManager[indexPath.item] {
+        case .image(let id):
+            imageID = id
+        case .group(let contents):
+            guard let first = contents.first else { return }
+            switch first {
+            case .image(let id):
+                imageID = id
+            default:
+                return
+            }
+        }
+
+        let viewerVC = ImageViewerViewController(document: document, imageID: imageID)
+        let cellFrameInTargetCoordinateSystem = viewerVC.view.convert(frame, from: cell.imageView)
+
+        let navigationController = UINavigationController(rootViewController: viewerVC)
+        navigationController.navigationBar.barStyle = .blackTranslucent
+        navigationController.modalPresentationStyle = .overFullScreen
+
+        present(navigationController, animated: false) {
+            cell.isHidden = true
+            viewerVC.beginTransition(from: cellFrameInTargetCoordinateSystem) {
+                cell.isHidden = false
+            }
+        }
     }
 }
 
@@ -68,4 +117,12 @@ extension ImageBrowserViewController: UICollectionViewDelegateFlowLayout {
     }
 }
 
+extension ImageBrowserViewController: BrowsingManagerDelegate {
+    func browsingManager(_ browsingManager: BrowsingManager, didChangeItemWithIndex index: Int) {
+        collectionView.reloadItems(at: [IndexPath(item: index, section: 0)])
+    }
 
+    func browsingManager(_ browsingManager: BrowsingManager, didLoadImageListEntries entries: [ImageListEntry]) {
+        collectionView.insertItems(at: entries.indices.map { IndexPath(item: $0, section: 0) })
+    }
+}

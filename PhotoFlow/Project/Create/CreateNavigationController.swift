@@ -38,8 +38,9 @@ class CreateNavigationController: UINavigationController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        navigationBar.barStyle = .blackTranslucent
         view.backgroundColor = .clear
-        view.blur(style: .light)
+        view.blur(style: .dark)
     }
 
     private var name: String = ""
@@ -62,6 +63,28 @@ class CreateNavigationController: UINavigationController {
         }))
 
         self.present(alert, animated: true)
+    }
+
+    private func finishImport(of assets: [PHAsset], completionHandler: (() -> ())?) {
+        let alertView = UIAlertController(title: "Delete assets?", message: "Do you want to keep the raw images in the Photos app?", preferredStyle: .alert)
+
+        alertView.addAction(UIAlertAction(title: "Keep", style: .cancel, handler: { _ in
+            completionHandler?()
+        }))
+
+        alertView.addAction(UIAlertAction(title: "Delete", style: .destructive, handler: { _ in
+            do {
+                try PHPhotoLibrary.shared().performChangesAndWait {
+                    PHAssetChangeRequest.deleteAssets(NSArray(array: assets))
+                }
+            } catch {
+                fatalError("Failed to delete images! \(error.localizedDescription)")
+            }
+
+            completionHandler?()
+        }))
+
+        present(alertView, animated: true)
     }
 }
 
@@ -98,12 +121,7 @@ extension CreateNavigationController: ImportSelectionViewControllerDelegate {
             }
         }
 
-        do {
-            try FileManager.default.createDirectory(at: cacheDirectory, withIntermediateDirectories: true, attributes: nil)
-            UIApplication.clearCaches()
-        } catch {
-            return failureHandler(DocumentCreationError.unableToSave)
-        }
+        UIApplication.clearCaches()
 
         let document = ProjectDocument(fileURL: newDocumentURL, importManager: importManager)
 
@@ -117,6 +135,7 @@ extension CreateNavigationController: ImportSelectionViewControllerDelegate {
                     return failureHandler(DocumentCreationError.unableToOpen)
                 }
 
+                // TODO This is potentially destructive. Some images are not being inserted which yields data loss when deleting the images along the way.
                 let (producer, progress) = document.importPhotos(from: assets)
 
                 progress.signal.observe(on: QueueScheduler.main).observeValues {
@@ -129,8 +148,10 @@ extension CreateNavigationController: ImportSelectionViewControllerDelegate {
                             return failureHandler(DocumentCreationError.unableToClose)
                         }
 
-                        self.dismiss(animated: true) {
-                            self.importHandler(newDocumentURL, .move)
+                        self.finishImport(of: assets) {
+                            self.dismiss(animated: true) {
+                                self.importHandler(newDocumentURL, .move)
+                            }
                         }
                     }
                 }).observe(on: QueueScheduler.main).startWithResult { result in

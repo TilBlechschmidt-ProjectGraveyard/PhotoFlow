@@ -63,7 +63,7 @@ class ImportSelectionViewController: UIViewController {
         super.init(nibName: nil, bundle: nil)
 
         titleView.text = "Import"
-        view.backgroundColor = .white
+        view.backgroundColor = Constants.colors.background
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -85,13 +85,17 @@ class ImportSelectionViewController: UIViewController {
 
         titleView.font = UIFont.boldSystemFont(ofSize: 18)
         subtitleView.font = UIFont.systemFont(ofSize: UIFont.smallSystemFontSize)
-        subtitleView.textColor = .darkGray
+        titleView.textColor = .white
+        subtitleView.textColor = .lightGray
+
         let navbarTitleStackView = UIStackView(arrangedSubviews: [titleView, subtitleView])
         navbarTitleStackView.axis = .vertical
         navbarTitleStackView.alignment = .center
         navbarTitleStackView.distribution = .fill
         navbarTitleStackView.spacing = Constants.uiPadding / 4
         navigationItem.titleView = navbarTitleStackView
+
+
     }
 
     override func viewDidLoad() {
@@ -328,7 +332,9 @@ class CreateViewSupplimentaryView: UICollectionReusableView {
     }
 
     func setupUI() {
-        blur(style: .extraLight)
+        blur(style: .dark)
+
+        titleLabel.textColor = .white
 
         selectButton.addTarget(self, action: #selector(buttonClicked), for: .touchUpInside)
 

@@ -17,7 +17,7 @@ class ImportProgressViewController: UIViewController {
     private let note = UILabel()
     private let imageView = UIImageView()
     private let progressBar = UIProgressView(progressViewStyle: .default)
-    private let activityIndicator = UIActivityIndicatorView(style: .gray)
+    private let activityIndicator = UIActivityIndicatorView(style: .white)
     private let progressLabel = UILabel()
     private let cancelButton = UIButton(type: .system)
 
@@ -69,8 +69,9 @@ class ImportProgressViewController: UIViewController {
         label.font = label.font.withSize(20)
         note.font = note.font.withSize(13)
         progressLabel.font = progressLabel.font.withSize(13)
-        progressLabel.textColor = .darkGray
-        note.textColor = .darkGray
+        label.textColor = .white
+        progressLabel.textColor = .lightGray
+        note.textColor = .lightGray
 
         cancelButton.setTitle("Cancel", for: .normal)
         cancelButton.addTarget(self, action: #selector(cancel), for: .touchUpInside)
@@ -84,7 +85,7 @@ class ImportProgressViewController: UIViewController {
         contentView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
-        contentView.blur(style: .extraLight)
+        contentView.blur(style: .dark)
 
         let stackView = UIStackView(arrangedSubviews: [label, note, imageView, progressBar, progressLabel, cancelButton])
         stackView.axis = .vertical

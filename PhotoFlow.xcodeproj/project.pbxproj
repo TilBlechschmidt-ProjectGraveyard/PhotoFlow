@@ -14,6 +14,7 @@
 		303E314E2296D96C00161103 /* ImageBrowserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 303E314D2296D96C00161103 /* ImageBrowserViewController.swift */; };
 		303E31522296E47C00161103 /* ImageEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 303E31512296E47C00161103 /* ImageEntity.swift */; };
 		303E31542296F63600161103 /* ImageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 303E31532296F63600161103 /* ImageManager.swift */; };
+		304481E0229A9A21004E34B2 /* Array+Next+Previous.swift in Sources */ = {isa = PBXBuildFile; fileRef = 304481DF229A9A21004E34B2 /* Array+Next+Previous.swift */; };
 		306252C12291E93D00B9FD05 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 306252C02291E93D00B9FD05 /* AppDelegate.swift */; };
 		306252C32291E93D00B9FD05 /* DocumentBrowserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 306252C22291E93D00B9FD05 /* DocumentBrowserViewController.swift */; };
 		306252C52291E93D00B9FD05 /* DocumentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 306252C42291E93D00B9FD05 /* DocumentViewController.swift */; };
@@ -22,7 +23,17 @@
 		306252CF2291E93E00B9FD05 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 306252CD2291E93E00B9FD05 /* LaunchScreen.storyboard */; };
 		306252D72291E95600B9FD05 /* ImportManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 306252D62291E95600B9FD05 /* ImportManager.swift */; };
 		307B65EA2291FC550099DB8E /* ProjectModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 307B65E82291FC550099DB8E /* ProjectModel.xcdatamodeld */; };
+		307D41D2229B272300FC63F4 /* Array+Next+Previous.swift in Sources */ = {isa = PBXBuildFile; fileRef = 304481DF229A9A21004E34B2 /* Array+Next+Previous.swift */; };
+		307D41D3229B273000FC63F4 /* CGImage+Histogram.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30201CB32297F9F80072F27F /* CGImage+Histogram.swift */; };
+		307D41D5229B2E9800FC63F4 /* ImageHistogram.swift in Sources */ = {isa = PBXBuildFile; fileRef = 307D41D4229B2E9800FC63F4 /* ImageHistogram.swift */; };
+		308F92E52299DB53006B13DE /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 308F92E42299DB53006B13DE /* Media.xcassets */; };
+		308F92E72299DB53006B13DE /* ActionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 308F92E62299DB53006B13DE /* ActionViewController.swift */; };
+		308F92EA2299DB54006B13DE /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 308F92E82299DB53006B13DE /* MainInterface.storyboard */; };
+		308F92EE2299DB54006B13DE /* PhotoFlowImportAction.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 308F92E22299DB53006B13DE /* PhotoFlowImportAction.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		3098B6EB22956E07006A40CC /* ImportProgressViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3098B6EA22956E07006A40CC /* ImportProgressViewController.swift */; };
+		30A32FFE229ABCAF00411D4F /* BrowsingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30A32FFD229ABCAF00411D4F /* BrowsingManager.swift */; };
+		30A33000229B22D100411D4F /* PanDirectionGestureRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30A32FFF229B22D100411D4F /* PanDirectionGestureRecognizer.swift */; };
+		30C27684229961D500C9B2AB /* ImageViewerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30C27683229961D500C9B2AB /* ImageViewerViewController.swift */; };
 		30CA7B6A2294AA0B00D628F6 /* NamingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30CA7B692294AA0B00D628F6 /* NamingViewController.swift */; };
 		30DBF5132292A45200611698 /* ImageHash.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30DBF5122292A45200611698 /* ImageHash.swift */; };
 		30DBF51B2292A57A00611698 /* ReactiveCocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 30DBF5162292A57A00611698 /* ReactiveCocoa.framework */; };
@@ -31,19 +42,13 @@
 		30DBF51E2292A57A00611698 /* CocoaImageHashing.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 30DBF5192292A57A00611698 /* CocoaImageHashing.framework */; };
 		30DBF5212292A98200611698 /* ImageMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30DBF5202292A98200611698 /* ImageMetadata.swift */; };
 		30E38D732293F7D8003BA524 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30E38D722293F7D8003BA524 /* main.swift */; };
-		30E38D7A2293F850003BA524 /* ImageMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30DBF5202292A98200611698 /* ImageMetadata.swift */; };
 		30E38D7D22940953003BA524 /* Dictionary+Take.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30E38D7C22940953003BA524 /* Dictionary+Take.swift */; };
 		30E38D7E2294095A003BA524 /* Dictionary+Take.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30E38D7C22940953003BA524 /* Dictionary+Take.swift */; };
 		30E38D81229416CD003BA524 /* EXIFAuxMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30E38D80229416CD003BA524 /* EXIFAuxMetadata.swift */; };
 		30E38D83229416E1003BA524 /* EXIFMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30E38D82229416E1003BA524 /* EXIFMetadata.swift */; };
 		30E38D852294170E003BA524 /* TIFFMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30E38D842294170E003BA524 /* TIFFMetadata.swift */; };
 		30E38D8722941748003BA524 /* ImageOrientation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30E38D8622941748003BA524 /* ImageOrientation.swift */; };
-		30E38D8822941761003BA524 /* ImageOrientation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30E38D8622941748003BA524 /* ImageOrientation.swift */; };
-		30E38D8922941763003BA524 /* EXIFMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30E38D82229416E1003BA524 /* EXIFMetadata.swift */; };
-		30E38D8A22941765003BA524 /* EXIFAuxMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30E38D80229416CD003BA524 /* EXIFAuxMetadata.swift */; };
-		30E38D8B22941767003BA524 /* TIFFMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30E38D842294170E003BA524 /* TIFFMetadata.swift */; };
 		30E38D8D22941ABB003BA524 /* CLLocation+EXIF.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30E38D8C22941ABB003BA524 /* CLLocation+EXIF.swift */; };
-		30E38D8E22941B8B003BA524 /* CLLocation+EXIF.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30E38D8C22941ABB003BA524 /* CLLocation+EXIF.swift */; };
 		30E38D9122942B2C003BA524 /* ImportSelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30E38D9022942B2C003BA524 /* ImportSelectionViewController.swift */; };
 		30E38D93229453D2003BA524 /* UIView+Blur.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30E38D92229453D2003BA524 /* UIView+Blur.swift */; };
 		30E38D9522949471003BA524 /* CreateNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30E38D9422949471003BA524 /* CreateNavigationController.swift */; };
@@ -53,7 +58,28 @@
 		30F73BA62291F95600C85D7B /* compact_camera@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 30F73BA52291F95600C85D7B /* compact_camera@3x.png */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		308F92EC2299DB54006B13DE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 306252B52291E93D00B9FD05 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 308F92E12299DB53006B13DE;
+			remoteInfo = PhotoFlowImportAction;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXCopyFilesBuildPhase section */
+		308F92F22299DB54006B13DE /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				308F92EE2299DB54006B13DE /* PhotoFlowImportAction.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		30E38D6E2293F7D8003BA524 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -73,6 +99,7 @@
 		303E314D2296D96C00161103 /* ImageBrowserViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageBrowserViewController.swift; sourceTree = "<group>"; };
 		303E31512296E47C00161103 /* ImageEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageEntity.swift; sourceTree = "<group>"; };
 		303E31532296F63600161103 /* ImageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageManager.swift; sourceTree = "<group>"; };
+		304481DF229A9A21004E34B2 /* Array+Next+Previous.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Next+Previous.swift"; sourceTree = "<group>"; };
 		306252BD2291E93D00B9FD05 /* PhotoFlow.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PhotoFlow.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		306252C02291E93D00B9FD05 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		306252C22291E93D00B9FD05 /* DocumentBrowserViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentBrowserViewController.swift; sourceTree = "<group>"; };
@@ -83,7 +110,16 @@
 		306252D02291E93E00B9FD05 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		306252D62291E95600B9FD05 /* ImportManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportManager.swift; sourceTree = "<group>"; };
 		307B65E92291FC550099DB8E /* ProjectModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = ProjectModel.xcdatamodel; sourceTree = "<group>"; };
+		307D41D4229B2E9800FC63F4 /* ImageHistogram.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageHistogram.swift; sourceTree = "<group>"; };
+		308F92E22299DB53006B13DE /* PhotoFlowImportAction.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = PhotoFlowImportAction.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		308F92E42299DB53006B13DE /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Media.xcassets; sourceTree = "<group>"; };
+		308F92E62299DB53006B13DE /* ActionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionViewController.swift; sourceTree = "<group>"; };
+		308F92E92299DB53006B13DE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
+		308F92EB2299DB54006B13DE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3098B6EA22956E07006A40CC /* ImportProgressViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportProgressViewController.swift; sourceTree = "<group>"; };
+		30A32FFD229ABCAF00411D4F /* BrowsingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowsingManager.swift; sourceTree = "<group>"; };
+		30A32FFF229B22D100411D4F /* PanDirectionGestureRecognizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PanDirectionGestureRecognizer.swift; sourceTree = "<group>"; };
+		30C27683229961D500C9B2AB /* ImageViewerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageViewerViewController.swift; sourceTree = "<group>"; };
 		30CA7B692294AA0B00D628F6 /* NamingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NamingViewController.swift; sourceTree = "<group>"; };
 		30DBF5122292A45200611698 /* ImageHash.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageHash.swift; sourceTree = "<group>"; };
 		30DBF5152292A57A00611698 /* ReactiveMapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ReactiveMapKit.framework; path = Carthage/Build/iOS/ReactiveMapKit.framework; sourceTree = "<group>"; };
@@ -121,6 +157,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		308F92DF2299DB53006B13DE /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		30E38D6D2293F7D8003BA524 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -136,6 +179,7 @@
 			children = (
 				30F73BA52291F95600C85D7B /* compact_camera@3x.png */,
 				306252BF2291E93D00B9FD05 /* PhotoFlow */,
+				308F92E32299DB53006B13DE /* PhotoFlowImportAction */,
 				30E38D712293F7D8003BA524 /* PhotoFlow-Mac */,
 				30E38D7B2293F939003BA524 /* PhotoFlow-Common */,
 				306252BE2291E93D00B9FD05 /* Products */,
@@ -148,6 +192,7 @@
 			children = (
 				306252BD2291E93D00B9FD05 /* PhotoFlow.app */,
 				30E38D702293F7D8003BA524 /* PhotoFlow-Mac */,
+				308F92E22299DB53006B13DE /* PhotoFlowImportAction.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -172,8 +217,30 @@
 				306252C62291E93D00B9FD05 /* ProjectDocument.swift */,
 				30E38D8F22942B09003BA524 /* Create */,
 				30EFAA5D2296D8E2008E1CB3 /* ImageBrowser */,
+				30C27682229961C100C9B2AB /* ImageViewer */,
 			);
 			path = Project;
+			sourceTree = "<group>";
+		};
+		307D41D1229B271D00FC63F4 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				30201CB32297F9F80072F27F /* CGImage+Histogram.swift */,
+				30E38D7C22940953003BA524 /* Dictionary+Take.swift */,
+				304481DF229A9A21004E34B2 /* Array+Next+Previous.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		308F92E32299DB53006B13DE /* PhotoFlowImportAction */ = {
+			isa = PBXGroup;
+			children = (
+				308F92E42299DB53006B13DE /* Media.xcassets */,
+				308F92E62299DB53006B13DE /* ActionViewController.swift */,
+				308F92E82299DB53006B13DE /* MainInterface.storyboard */,
+				308F92EB2299DB54006B13DE /* Info.plist */,
+			);
+			path = PhotoFlowImportAction;
 			sourceTree = "<group>";
 		};
 		30A8CF832293F69E008DA5A5 /* Image */ = {
@@ -182,8 +249,17 @@
 				30DBF5122292A45200611698 /* ImageHash.swift */,
 				303E31512296E47C00161103 /* ImageEntity.swift */,
 				303E31532296F63600161103 /* ImageManager.swift */,
+				307D41D4229B2E9800FC63F4 /* ImageHistogram.swift */,
 			);
 			path = Image;
+			sourceTree = "<group>";
+		};
+		30C27682229961C100C9B2AB /* ImageViewer */ = {
+			isa = PBXGroup;
+			children = (
+				30C27683229961D500C9B2AB /* ImageViewerViewController.swift */,
+			);
+			path = ImageViewer;
 			sourceTree = "<group>";
 		};
 		30DBF5142292A57A00611698 /* Frameworks */ = {
@@ -219,8 +295,8 @@
 		30E38D7B2293F939003BA524 /* PhotoFlow-Common */ = {
 			isa = PBXGroup;
 			children = (
+				307D41D1229B271D00FC63F4 /* Extensions */,
 				30E38D7F22941658003BA524 /* Metadata */,
-				30E38D7C22940953003BA524 /* Dictionary+Take.swift */,
 			);
 			path = "PhotoFlow-Common";
 			sourceTree = "<group>";
@@ -256,6 +332,7 @@
 				303E314D2296D96C00161103 /* ImageBrowserViewController.swift */,
 				30201CB122973ABB0072F27F /* ImageBrowserCell.swift */,
 				30201CB72298906F0072F27F /* ShadowedImageView.swift */,
+				30A32FFD229ABCAF00411D4F /* BrowsingManager.swift */,
 			);
 			path = ImageBrowser;
 			sourceTree = "<group>";
@@ -266,8 +343,8 @@
 				30F73BA32291F06500C85D7B /* UIApplication+Directories.swift */,
 				30E38D92229453D2003BA524 /* UIView+Blur.swift */,
 				30EFAA5B2296ACC7008E1CB3 /* ImageEntity+EXIF.swift */,
-				30201CB32297F9F80072F27F /* CGImage+Histogram.swift */,
 				30201CB522988D4C0072F27F /* UIView+DropShadow.swift */,
+				30A32FFF229B22D100411D4F /* PanDirectionGestureRecognizer.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -293,15 +370,34 @@
 				306252BA2291E93D00B9FD05 /* Frameworks */,
 				306252BB2291E93D00B9FD05 /* Resources */,
 				30DBF51F2292A5AA00611698 /* Copy Frameworks */,
+				308F92F22299DB54006B13DE /* Embed App Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				308F92ED2299DB54006B13DE /* PBXTargetDependency */,
 			);
 			name = PhotoFlow;
 			productName = PhotoFlow;
 			productReference = 306252BD2291E93D00B9FD05 /* PhotoFlow.app */;
 			productType = "com.apple.product-type.application";
+		};
+		308F92E12299DB53006B13DE /* PhotoFlowImportAction */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 308F92F12299DB54006B13DE /* Build configuration list for PBXNativeTarget "PhotoFlowImportAction" */;
+			buildPhases = (
+				308F92DE2299DB53006B13DE /* Sources */,
+				308F92DF2299DB53006B13DE /* Frameworks */,
+				308F92E02299DB53006B13DE /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = PhotoFlowImportAction;
+			productName = PhotoFlowImportAction;
+			productReference = 308F92E22299DB53006B13DE /* PhotoFlowImportAction.appex */;
+			productType = "com.apple.product-type.app-extension";
 		};
 		30E38D6F2293F7D8003BA524 /* PhotoFlow-Mac */ = {
 			isa = PBXNativeTarget;
@@ -333,6 +429,9 @@
 					306252BC2291E93D00B9FD05 = {
 						CreatedOnToolsVersion = 10.2.1;
 					};
+					308F92E12299DB53006B13DE = {
+						CreatedOnToolsVersion = 10.2.1;
+					};
 					30E38D6F2293F7D8003BA524 = {
 						CreatedOnToolsVersion = 10.2.1;
 					};
@@ -353,6 +452,7 @@
 			targets = (
 				306252BC2291E93D00B9FD05 /* PhotoFlow */,
 				30E38D6F2293F7D8003BA524 /* PhotoFlow-Mac */,
+				308F92E12299DB53006B13DE /* PhotoFlowImportAction */,
 			);
 		};
 /* End PBXProject section */
@@ -365,6 +465,15 @@
 				306252CF2291E93E00B9FD05 /* LaunchScreen.storyboard in Resources */,
 				306252CC2291E93E00B9FD05 /* Assets.xcassets in Resources */,
 				30F73BA62291F95600C85D7B /* compact_camera@3x.png in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		308F92E02299DB53006B13DE /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				308F92E52299DB53006B13DE /* Media.xcassets in Resources */,
+				308F92EA2299DB54006B13DE /* MainInterface.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -416,10 +525,13 @@
 				30E38D852294170E003BA524 /* TIFFMetadata.swift in Sources */,
 				30DBF5132292A45200611698 /* ImageHash.swift in Sources */,
 				30201CB222973ABB0072F27F /* ImageBrowserCell.swift in Sources */,
+				304481E0229A9A21004E34B2 /* Array+Next+Previous.swift in Sources */,
 				30E38D9122942B2C003BA524 /* ImportSelectionViewController.swift in Sources */,
 				30E38D83229416E1003BA524 /* EXIFMetadata.swift in Sources */,
+				30C27684229961D500C9B2AB /* ImageViewerViewController.swift in Sources */,
 				30E38D8722941748003BA524 /* ImageOrientation.swift in Sources */,
 				3098B6EB22956E07006A40CC /* ImportProgressViewController.swift in Sources */,
+				30A32FFE229ABCAF00411D4F /* BrowsingManager.swift in Sources */,
 				30E38D93229453D2003BA524 /* UIView+Blur.swift in Sources */,
 				30CA7B6A2294AA0B00D628F6 /* NamingViewController.swift in Sources */,
 				307B65EA2291FC550099DB8E /* ProjectModel.xcdatamodeld in Sources */,
@@ -427,8 +539,18 @@
 				306252C32291E93D00B9FD05 /* DocumentBrowserViewController.swift in Sources */,
 				303E31542296F63600161103 /* ImageManager.swift in Sources */,
 				306252D72291E95600B9FD05 /* ImportManager.swift in Sources */,
+				307D41D5229B2E9800FC63F4 /* ImageHistogram.swift in Sources */,
 				303E31522296E47C00161103 /* ImageEntity.swift in Sources */,
+				30A33000229B22D100411D4F /* PanDirectionGestureRecognizer.swift in Sources */,
 				306252C12291E93D00B9FD05 /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		308F92DE2299DB53006B13DE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				308F92E72299DB53006B13DE /* ActionViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -436,18 +558,22 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				30E38D8822941761003BA524 /* ImageOrientation.swift in Sources */,
-				30E38D8922941763003BA524 /* EXIFMetadata.swift in Sources */,
-				30E38D8E22941B8B003BA524 /* CLLocation+EXIF.swift in Sources */,
+				307D41D3229B273000FC63F4 /* CGImage+Histogram.swift in Sources */,
 				30E38D7E2294095A003BA524 /* Dictionary+Take.swift in Sources */,
-				30E38D8B22941767003BA524 /* TIFFMetadata.swift in Sources */,
-				30E38D7A2293F850003BA524 /* ImageMetadata.swift in Sources */,
 				30E38D732293F7D8003BA524 /* main.swift in Sources */,
-				30E38D8A22941765003BA524 /* EXIFAuxMetadata.swift in Sources */,
+				307D41D2229B272300FC63F4 /* Array+Next+Previous.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		308F92ED2299DB54006B13DE /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 308F92E12299DB53006B13DE /* PhotoFlowImportAction */;
+			targetProxy = 308F92EC2299DB54006B13DE /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		306252CD2291E93E00B9FD05 /* LaunchScreen.storyboard */ = {
@@ -456,6 +582,14 @@
 				306252CE2291E93E00B9FD05 /* Base */,
 			);
 			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		308F92E82299DB53006B13DE /* MainInterface.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				308F92E92299DB53006B13DE /* Base */,
+			);
+			name = MainInterface.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -580,6 +714,7 @@
 		306252D42291E93E00B9FD05 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = LQWS3ZT7UK;
@@ -602,6 +737,7 @@
 		306252D52291E93E00B9FD05 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = LQWS3ZT7UK;
@@ -616,6 +752,44 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = de.blechschmidt.PhotoFlow;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		308F92EF2299DB54006B13DE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = LQWS3ZT7UK;
+				INFOPLIST_FILE = PhotoFlowImportAction/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = de.blechschmidt.PhotoFlow.PhotoFlowImportAction;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		308F92F02299DB54006B13DE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = LQWS3ZT7UK;
+				INFOPLIST_FILE = PhotoFlowImportAction/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = de.blechschmidt.PhotoFlow.PhotoFlowImportAction;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -664,6 +838,15 @@
 			buildConfigurations = (
 				306252D42291E93E00B9FD05 /* Debug */,
 				306252D52291E93E00B9FD05 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		308F92F12299DB54006B13DE /* Build configuration list for PBXNativeTarget "PhotoFlowImportAction" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				308F92EF2299DB54006B13DE /* Debug */,
+				308F92F02299DB54006B13DE /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
