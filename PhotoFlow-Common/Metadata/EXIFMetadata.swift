@@ -65,6 +65,32 @@ struct EXIFMetadata {
     /// CCD sensitivity equivalent to Ag-Hr film speedrate.
     let iso: [Int]?
 
+    /// Human readable exposure program
+    var exposureProgramString: String? {
+        guard let exposureProgram = exposureProgram else {
+            return nil
+        }
+
+        switch exposureProgram {
+        case .manual:
+            return "Manual"
+        case .aperturePriority:
+            return "Aperture priority"
+        case .shutterPriority:
+            return "Shutter priority"
+        case .autoNormal:
+            return "Automatic"
+        case .autoCreative:
+            return "Automatic (Creative)"
+        case .autoAction:
+            return "Automatic (Action)"
+        case .autoPortrait:
+            return "Automatic (Portrait)"
+        case .autoLandscape:
+            return "Automatic (Landscape)"
+        }
+    }
+
     /// Human readable exposure
     var exposureString: String? {
         guard let exposureTime = exposureTime else {

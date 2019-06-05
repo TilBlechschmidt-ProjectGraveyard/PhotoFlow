@@ -67,7 +67,8 @@ class NamingViewController: UIViewController {
     }
 
     @objc func nextTapped() {
-        delegate?.namingViewController(self, didSet: input.text ?? "Untitled project")
+        let name = input.text?.trimmingCharacters(in: .whitespaces)
+        delegate?.namingViewController(self, didSet: name ?? "Untitled project")
     }
 
     @objc func animateWithKeyboard(notification: NSNotification) {

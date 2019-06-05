@@ -55,14 +55,34 @@ class DocumentBrowserViewController: UIDocumentBrowserViewController, UIDocument
     }
     
     // MARK: Document Presentation
-    
     func presentDocument(at documentURL: URL) {
+        let document = ProjectDocument(fileURL: documentURL, importManager: importManager)
+        present(document: document)
+    }
+
+    func present(document: ProjectDocument) {
         let documentViewController = DocumentViewController()
-        documentViewController.document = ProjectDocument(fileURL: documentURL, importManager: importManager)
+        documentViewController.document = document
 
         let navigationController = UINavigationController(rootViewController: documentViewController)
         navigationController.navigationBar.barStyle = .blackTranslucent
         present(navigationController, animated: true)
+    }
+
+    var currentlyOpenedDocument: ProjectDocument? {
+        guard let nc = presentedViewController as? UINavigationController, let vc = nc.viewControllers.first as? DocumentViewController else {
+            return nil
+        }
+
+        return vc.document
+    }
+
+    func closeDocuments(completionHandler: (() -> ())?) {
+        if let nc = presentedViewController as? UINavigationController, let vc = nc.viewControllers.first as? DocumentViewController {
+            vc.dismissDocumentViewController(completionHandler: completionHandler)
+        } else {
+            completionHandler?()
+        }
     }
 }
 

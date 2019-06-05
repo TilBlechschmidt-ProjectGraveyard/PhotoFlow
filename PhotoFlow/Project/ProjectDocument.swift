@@ -14,7 +14,8 @@ import ReactiveSwift
 class ProjectDocument: UIManagedDocument {
     private let importManager: ImportManager
 
-    var imageManager: ImageManager!
+    private(set) var imageManager: ImageManager!
+    private(set) var statusManager: ImageStatusManager!
 
     /// Only call on main thread
     var projectEntity: ProjectEntity {
@@ -29,7 +30,6 @@ class ProjectDocument: UIManagedDocument {
             return entity
         } else {
             let entity = ProjectEntity(entity: ProjectEntity.entity(), insertInto: context)
-            entity.openCounter = 41
             try! self.managedObjectContext.save()
 
             return entity
@@ -38,11 +38,6 @@ class ProjectDocument: UIManagedDocument {
 
     var title: String {
         return fileURL.deletingPathExtension().lastPathComponent
-    }
-
-    /// Only call on main thread
-    var openCounter: Int32 {
-        return projectEntity.openCounter
     }
 
     /// Only call on main thread
@@ -55,14 +50,11 @@ class ProjectDocument: UIManagedDocument {
         return (try? managedObjectContext.fetch(fetchRequest)) ?? []
     }
 
-    func incrementCounter() {
-        projectEntity.openCounter += 1
-    }
-
     init(fileURL url: URL, importManager: ImportManager) {
         self.importManager = importManager
         super.init(fileURL: url)
         self.imageManager = ImageManager(document: self)
+        self.statusManager = ImageStatusManager(imageManager: imageManager)
     }
 
     private static var defaultImportOptions: PHImageRequestOptions {
@@ -114,13 +106,19 @@ class ProjectDocument: UIManagedDocument {
         }
     }
 
-    func importPhoto(from asset: PHAsset, with options: PHImageRequestOptions = ProjectDocument.defaultImportOptions) -> SignalProducer<Data, Error> {
-
+    func createBackgroundContext() -> NSManagedObjectContext {
         let context = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
 
         managedObjectContext.performAndWait {
             context.parent = managedObjectContext
         }
+
+        return context
+    }
+
+    func importPhoto(from asset: PHAsset, with options: PHImageRequestOptions = ProjectDocument.defaultImportOptions) -> SignalProducer<Data, Error> {
+
+        let context = createBackgroundContext()
 
         let originalImageProducer = originalImage(for: asset, with: options)
         let thumbnailProducer = thumbnail(for: asset)
@@ -141,7 +139,7 @@ class ProjectDocument: UIManagedDocument {
                     let orientation = metadata.orientation ?? UIImage.Orientation.up
                     let imageHash = ImageHash(from: uiImage)
 
-                    let imageEntity = NSEntityDescription.insertNewObject(forEntityName: "ImageEntity", into: context) as! ImageEntity
+                    let imageEntity = NSEntityDescription.insertNewObject(forEntityName: "ImportedImageEntity", into: context) as! ImportedImageEntity
                     imageEntity.width = Int32(asset.pixelWidth)
                     imageEntity.height = Int32(asset.pixelHeight)
                     imageEntity.creationDate = creationDate
@@ -151,9 +149,11 @@ class ProjectDocument: UIManagedDocument {
                     imageEntity.originalFilename = originalFilename
                     imageEntity.perceptualHash = imageHash.rawValue
                     imageEntity.orientation = Int16(orientation.rawValue)
+                    imageEntity.filesize = self.importManager.fileSize(for: asset) ?? 0
 
-                    let projectEntity = self.projectEntity(from: context)
-                    projectEntity.addToImages(imageEntity)
+//                    let projectEntity = self.projectEntity(from: context)
+//                    projectEntity.addToImages(imageEntity)
+
                     context.processPendingChanges()
                     try? context.save()
                     self.updateChangeCount(.done)
@@ -194,34 +194,47 @@ class ProjectDocument: UIManagedDocument {
         )
     }
 
-//    // TODO Deduplicate the code in this and the next function
-//    func image(after id: ImageEntity.ID) -> ImageEntity.ID? {
-//        guard let entity = imageManager.imageEntity(withID: id), let creationDate = entity.creationDate else {
-//            return nil
-//        }
-//
-//        let fetchRequest: NSFetchRequest<ImageEntity> = ImageEntity.fetchRequest()
-//        let sort = NSSortDescriptor(key: #keyPath(ImageEntity.creationDate), ascending: true)
-//        fetchRequest.sortDescriptors = [sort]
-//        fetchRequest.fetchLimit = 1
-//        fetchRequest.predicate = NSPredicate(format: "creationDate > %@", NSDate(timeIntervalSince1970: creationDate.timeIntervalSince1970))
-//        // TODO Filter images by ProjectEntity. Not really necessary since there is only one but whatever.
-//
-//        return (try? managedObjectContext.fetch(fetchRequest))?.first?.objectID
-//    }
-//
-//    func image(before id: ImageEntity.ID) -> ImageEntity.ID? {
-//        guard let entity = imageManager.imageEntity(withID: id), let creationDate = entity.creationDate else {
-//            return nil
-//        }
-//
-//        let fetchRequest: NSFetchRequest<ImageEntity> = ImageEntity.fetchRequest()
-//        let sort = NSSortDescriptor(key: #keyPath(ImageEntity.creationDate), ascending: false)
-//        fetchRequest.sortDescriptors = [sort]
-//        fetchRequest.fetchLimit = 1
-//        fetchRequest.predicate = NSPredicate(format: "creationDate < %@", NSDate(timeIntervalSince1970: creationDate.timeIntervalSince1970))
-//        // TODO Filter images by ProjectEntity. Not really necessary since there is only one but whatever.
-//
-//        return (try? managedObjectContext.fetch(fetchRequest))?.first?.objectID
-//    }
+    func importedImageIDs() -> SignalProducer<[ImportedImageEntity.ID], Error> {
+        return SignalProducer { observer, _ in
+            let context = self.createBackgroundContext()
+            context.perform {
+                let fetchRequest: NSFetchRequest<ImportedImageEntity> = ImportedImageEntity.fetchRequest()
+                let sort = NSSortDescriptor(key: #keyPath(ImportedImageEntity.creationDate), ascending: true)
+                fetchRequest.sortDescriptors = [sort]
+
+                // TODO Filter images by ProjectEntity. Not really necessary since there is only one but whatever.
+
+                do {
+                    let images = try context.fetch(fetchRequest)
+                    observer.send(value: images.map { $0.objectID })
+                    observer.sendCompleted()
+                } catch {
+                    observer.send(error: error)
+                    return
+                }
+            }
+        }
+    }
+
+    func editedImageIDs() -> SignalProducer<[EditedImageEntity.ID], Error> {
+        return SignalProducer { observer, _ in
+            let context = self.createBackgroundContext()
+            context.perform {
+                let fetchRequest: NSFetchRequest<EditedImageEntity> = EditedImageEntity.fetchRequest()
+                let sort = NSSortDescriptor(key: #keyPath(EditedImageEntity.creationDate), ascending: true)
+                fetchRequest.sortDescriptors = [sort]
+
+                // TODO Filter images by ProjectEntity. Not really necessary since there is only one but whatever.
+
+                do {
+                    let images = try context.fetch(fetchRequest)
+                    observer.send(value: images.map { $0.objectID })
+                    observer.sendCompleted()
+                } catch {
+                    observer.send(error: error)
+                    return
+                }
+            }
+        }
+    }
 }

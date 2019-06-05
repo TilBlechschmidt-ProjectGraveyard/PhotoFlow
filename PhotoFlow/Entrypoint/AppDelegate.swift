@@ -13,15 +13,30 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
+    func loadDefaultSettings() {
+        let defaultSettings = GenericSettings.defaults
+            + ProjectGridSettings.defaults
+            + ImageViewerSettings.defaults
 
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+        UserDefaults.standard.register(defaults: defaultSettings)
+
+        let versionString = "\(Bundle.main.releaseVersionNumber ?? "0") (\(Bundle.main.buildVersionNumber ?? "0"))"
+        GenericSettings.set(setting: .appVersion, versionString)
+    }
+
+    func loadDefaultWindow() {
         let window = UIWindow()
         window.rootViewController = DocumentBrowserViewController(forOpeningFilesWithContentTypes: nil)
         self.window = window
         window.makeKeyAndVisible()
+    }
 
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+
+        loadDefaultSettings()
         UIApplication.clearCaches()
+
+        loadDefaultWindow()
 
         return true
     }
@@ -49,12 +64,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func application(_ app: UIApplication, open inputURL: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
-        // Ensure the URL is a file URL
-        guard inputURL.isFileURL else { return false }
-                
-        // Reveal / import the document at the URL
         guard let documentBrowserViewController = window?.rootViewController as? DocumentBrowserViewController else { return false }
 
+        if let sourceApplication = options[.sourceApplication] as? String, sourceApplication == "de.blechschmidt.PhotoFlow.PhotoFlow-ShareExtension" {
+            // If inputURL.host == "continueWorkflow", attempt to import image in inputURL.lastPathComponent
+
+            ShareManager().processIncomingImage(withName: inputURL.lastPathComponent, documentBrowserViewController: documentBrowserViewController)
+
+            return true
+        }
+
+        // Ensure the URL is a file URL
+        guard inputURL.isFileURL else { return false }
+
+        // Reveal / import the document at the URL
         documentBrowserViewController.revealDocument(at: inputURL, importIfNeeded: true) { (revealedDocumentURL, error) in
             if let error = error {
                 // Handle the error appropriately
@@ -68,7 +91,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         return true
     }
-
-
 }
 
+extension Bundle {
+    var releaseVersionNumber: String? {
+        return infoDictionary?["CFBundleShortVersionString"] as? String
+    }
+    var buildVersionNumber: String? {
+        return infoDictionary?["CFBundleVersion"] as? String
+    }
+}

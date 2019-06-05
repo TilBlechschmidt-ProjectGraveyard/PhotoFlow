@@ -14,7 +14,7 @@ class DocumentViewController: UIViewController {
     override var navigationItem: UINavigationItem {
         let item = UINavigationItem(title: document?.title ?? "PhotoFlow")
         item.largeTitleDisplayMode = .automatic
-        item.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(dismissDocumentViewController))
+        item.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(dismissVC))
         return item
     }
 
@@ -49,21 +49,36 @@ class DocumentViewController: UIViewController {
         super.viewWillAppear(animated)
         
         // Access the document
-        document?.open(completionHandler: { (success) in
-            if success {
-                // Display the content of the document, e.g.:
-                if let document = self.document {
-                    self.loadBrowserVC(with: document)
-                } else {
-                    // TODO Show error / loading indicator
-                }
+        if let document = document {
+            if document.documentState == .normal {
+                self.loadBrowserVC(with: document)
             } else {
-                // Make sure to handle the failed import appropriately, e.g., by presenting an error message to the user.
+                document.open { success in
+                    guard success else { return }
+                    self.loadBrowserVC(with: document)
+                }
             }
-        })
+        }
+        
+//        document?.open(completionHandler: { (success) in
+//            if success {
+//                // Display the content of the document, e.g.:
+//                if let document = self.document {
+//                    self.loadBrowserVC(with: document)
+//                } else {
+//                    // TODO Show error / loading indicator
+//                }
+//            } else {
+//                // Make sure to handle the failed import appropriately, e.g., by presenting an error message to the user.
+//            }
+//        })
     }
-    
-    @objc func dismissDocumentViewController() {
+
+    @objc func dismissVC() {
+        dismissDocumentViewController()
+    }
+
+    func dismissDocumentViewController(completionHandler: (() -> ())? = nil) {
         document?.close { closed in
             guard closed else {
                 // TODO Tell the user
@@ -71,7 +86,7 @@ class DocumentViewController: UIViewController {
                 return
             }
 
-            self.dismiss(animated: true)
+            self.dismiss(animated: true, completion: completionHandler)
         }
     }
 }

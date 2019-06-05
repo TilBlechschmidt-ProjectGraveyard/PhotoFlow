@@ -17,6 +17,7 @@ enum ImageStatus: Int16 {
     case rejected = 2
 }
 
+
 @objc(ImageEntity)
 public class ImageEntity: NSManagedObject {
     typealias ID = NSManagedObjectID
@@ -25,14 +26,17 @@ public class ImageEntity: NSManagedObject {
         return CGSize(width: CGFloat(self.width), height: CGFloat(self.height))
     }()
 
-    lazy var imageHash: ImageHash = {
-        return ImageHash(rawValue: self.perceptualHash)
-    }()
-
     lazy var humanReadableUTI: String? = {
         return self.uti.flatMap {
             UTTypeCopyDescription($0 as CFString)?.takeRetainedValue() as String?
         }
+    }()
+}
+
+@objc(ImportedImageEntity)
+public class ImportedImageEntity: ImageEntity {
+    lazy var imageHash: ImageHash = {
+        return ImageHash(rawValue: self.perceptualHash)
     }()
 
     var status: ImageStatus {

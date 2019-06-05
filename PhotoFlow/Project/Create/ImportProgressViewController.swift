@@ -90,7 +90,7 @@ class ImportProgressViewController: UIViewController {
         let stackView = UIStackView(arrangedSubviews: [label, note, imageView, progressBar, progressLabel, cancelButton])
         stackView.axis = .vertical
         stackView.alignment = .center
-        stackView.spacing = Constants.uiPadding
+        stackView.spacing = Constants.spacing
         contentView.addSubview(stackView)
         stackView.snp.makeConstraints { make in
             make.center.equalToSuperview()

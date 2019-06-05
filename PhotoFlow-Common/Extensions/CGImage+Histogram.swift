@@ -9,11 +9,23 @@
 import CoreGraphics
 import Accelerate
 
-typealias NormalizedHistogramBins = (red: [CGFloat], green: [CGFloat], blue: [CGFloat])
+typealias NormalizedHistogramBins = (red: [CGFloat], green: [CGFloat], blue: [CGFloat], luminance: [CGFloat])
 
 extension CGImage {
+    // TODO Return luminance bin as well.
+    // Algorithm for luminance described at the end of page 2 in the following document:
+    // https://www.itu.int/dms_pubrec/itu-r/rec/bt/R-REC-BT.601-7-201103-I!!PDF-E.pdf
     func calculateNormalizedHistogram() -> NormalizedHistogramBins {
         let (_, red, green, blue) = calculateHistogram()
+
+        var luminance: [CGFloat] = Array(repeating: 0.0, count: red.count)
+        for i in 0..<red.count {
+            luminance[i] = 0.299 * CGFloat(red[i]) + 0.587 * CGFloat(green[i]) + 0.114 * CGFloat(blue[i])
+        }
+
+        let maximumLuminanceCount = luminance.max() ?? 0
+        let maximumLuminanceValue = CGFloat(maximumLuminanceCount)
+        let normalizedLuminance = luminance.map { $0 / maximumLuminanceValue }
 
         let maximumPixelCount = (red + green + blue).max() ?? 0
         let maximumValue = CGFloat(maximumPixelCount)
@@ -22,7 +34,8 @@ extension CGImage {
         return (
             red: normalize(red),
             green: normalize(green),
-            blue: normalize(blue)
+            blue: normalize(blue),
+            luminance: normalizedLuminance
         )
     }
 

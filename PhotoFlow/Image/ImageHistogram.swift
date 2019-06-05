@@ -8,62 +8,124 @@
 
 import UIKit
 
-//class ImageHistogram: UIView {
-//    private let rawImageHistogram = RawImageHistogram()
-//
-//    var histogramData: NormalizedHistogramBins? {
-//        get { return rawImageHistogram.histogramData }
-//        set { rawImageHistogram.histogramData = histogramData }
-//    }
-//
-//    var colored: Bool {
-//        get { return rawImageHistogram.colored }
-//        set { rawImageHistogram.colored = colored }
-//    }
-//
-//    init() {
-//        super.init(frame: .zero)
-//
-//        backgroundColor = Constants.colors.background
-//
-//        addSubview(rawImageHistogram)
-//        rawImageHistogram.snp.makeConstraints { make in
-//            make.edges.equalToSuperview().inset(Constants.uiPadding)
-//        }
-//    }
-//
-//    required init?(coder aDecoder: NSCoder) {
-//        fatalError("init(coder:) has not been implemented")
-//    }
-//}
+struct HistogramMode: OptionSet {
+    let rawValue: Int
+
+    static let red       = HistogramMode(rawValue: 1 << 0)
+    static let green     = HistogramMode(rawValue: 1 << 1)
+    static let blue      = HistogramMode(rawValue: 1 << 2)
+    static let luminance = HistogramMode(rawValue: 1 << 3)
+
+    static let rgb: HistogramMode = [.red, .green, .blue]
+
+    var humanReadable: String {
+        var result = ""
+
+        if contains(.red) {
+            result += "R"
+        }
+
+        if contains(.green) {
+            result += "G"
+        }
+
+        if contains(.blue) {
+            result += "B"
+        }
+
+        if contains(.luminance) {
+            result += "L"
+        }
+
+        return result
+    }
+
+    static func from(settingsType: SettingsHistogramType) -> HistogramMode {
+        switch settingsType {
+        case .luminance:
+            return .luminance
+        case .rgb:
+            return .rgb
+        }
+    }
+}
 
 class ImageHistogram: UIView {
     var histogramData: NormalizedHistogramBins? = nil { didSet { self.setNeedsDisplay() } }
     var colored: Bool = true { didSet { self.setNeedsDisplay() } }
+    var yScaling: CGFloat = 0.9 { didSet { self.setNeedsDisplay() } }
+
+    var mode: HistogramMode {
+        didSet {
+            updateModeLabel()
+            self.setNeedsDisplay()
+        }
+    }
+
+    private var modeLabel = UILabel()
+    private var activityIndicator = UIActivityIndicatorView(style: .white)
 
     override init(frame: CGRect) {
+        mode = HistogramMode.from(settingsType: SettingsHistogramType.load())
+
         super.init(frame: frame)
-        backgroundColor = Constants.colors.background
+        backgroundColor = Constants.colors.darkBackground
+
+        activityIndicator.startAnimating()
+        addSubview(activityIndicator)
+        activityIndicator.snp.makeConstraints { make in
+            make.center.equalToSuperview()
+        }
+
+        modeLabel.textColor = .lightGray
+        modeLabel.font = UIFont.systemFont(ofSize: 10)
+        addSubview(modeLabel)
+        modeLabel.snp.makeConstraints { make in
+            make.top.equalToSuperview().inset(Constants.spacing)
+            make.left.equalToSuperview().inset(Constants.spacing)
+        }
+        updateModeLabel()
+
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(cycleMode))
+        addGestureRecognizer(tapGestureRecognizer)
     }
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
+    func updateModeLabel() {
+        modeLabel.text = mode.humanReadable
+    }
+
+    @objc func cycleMode() {
+        if mode == .rgb {
+            mode = .luminance
+        } else if mode == .luminance {
+            mode = .rgb
+        }
+    }
+
     override open func draw(_ rect: CGRect) {
+        super.draw(rect)
+
         guard let histogramData = histogramData else {
-            // TODO Show activity indicator
+            activityIndicator.startAnimating()
             return
         }
 
-        // TODO Figure out how to draw lines properly
-//        draw(bins: histogramData.red, color: .red, fill: false)
-//        draw(bins: histogramData.green, color: .green, fill: false)
-//        draw(bins: histogramData.blue, color: .blue, fill: false)
+        activityIndicator.stopAnimating()
 
-        draw(bins: histogramData.red, color: #colorLiteral(red: 0.7843137255, green: 0.1960784314, blue: 0.1960784314, alpha: 1))
-        draw(bins: histogramData.green, color: #colorLiteral(red: 0.1960784314, green: 0.7843137255, blue: 0.1960784314, alpha: 1))
-        draw(bins: histogramData.blue, color: #colorLiteral(red: 0.1960784314, green: 0.1960784314, blue: 0.7843137255, alpha: 1))
+        // Lines
+        if mode.contains(.red) { draw(bins: histogramData.red, color: .red, fill: false) }
+        if mode.contains(.green) { draw(bins: histogramData.green, color: .green, fill: false) }
+        if mode.contains(.blue) { draw(bins: histogramData.blue, color: .blue, fill: false) }
+
+        // Fills
+        if mode.contains(.luminance) { draw(bins: histogramData.luminance, color: .white) }
+        if mode.contains(.red) { draw(bins: histogramData.red, color: #colorLiteral(red: 0.7843137255, green: 0.1960784314, blue: 0.1960784314, alpha: 1)) }
+        if mode.contains(.green) { draw(bins: histogramData.green, color: #colorLiteral(red: 0.1960784314, green: 0.7843137255, blue: 0.1960784314, alpha: 1)) }
+        if mode.contains(.blue) { draw(bins: histogramData.blue, color: #colorLiteral(red: 0.1960784314, green: 0.1960784314, blue: 0.7843137255, alpha: 1)) }
     }
 
     private func draw(bins: [CGFloat], color: UIColor, fill: Bool = true) {
@@ -79,6 +141,10 @@ class ImageHistogram: UIView {
         let yAxisHeight = self.bounds.height
         let xAxisWidth = self.bounds.width
 
+        let scaleY: (CGFloat) -> CGFloat = {
+            return yAxisHeight - $0 * yAxisHeight * self.yScaling
+        }
+
         let binCount: CGFloat = 256
         let binWidth = xAxisWidth / binCount
 
@@ -89,7 +155,7 @@ class ImageHistogram: UIView {
         // Iterate points
         bins.enumerated().forEach {
             let (offset, value) = $0
-            path.addLine(to: CGPoint(x: CGFloat(offset) * binWidth, y: yAxisHeight - value * yAxisHeight))
+            path.addLine(to: CGPoint(x: CGFloat(offset) * binWidth, y: scaleY(value)))
         }
 
         if fill {

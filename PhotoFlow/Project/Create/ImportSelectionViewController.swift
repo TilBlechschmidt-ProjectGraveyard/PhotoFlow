@@ -92,7 +92,7 @@ class ImportSelectionViewController: UIViewController {
         navbarTitleStackView.axis = .vertical
         navbarTitleStackView.alignment = .center
         navbarTitleStackView.distribution = .fill
-        navbarTitleStackView.spacing = Constants.uiPadding / 4
+        navbarTitleStackView.spacing = Constants.spacing / 4
         navigationItem.titleView = navbarTitleStackView
 
 
@@ -144,7 +144,7 @@ class ImportSelectionViewController: UIViewController {
 
 extension ImportSelectionViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        return UIEdgeInsets(top: Constants.uiPadding, left: Constants.uiPadding * 2, bottom: Constants.uiPadding * 4, right: Constants.uiPadding * 2)
+        return UIEdgeInsets(top: Constants.spacing, left: Constants.spacing * 2, bottom: Constants.spacing * 4, right: Constants.spacing * 2)
     }
 }
 
